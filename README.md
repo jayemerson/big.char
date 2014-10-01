@@ -2,9 +2,9 @@ big.char
 ========
 
 Extends bigmemory's big.matrix to support big vectors of character strings.
-Current status via use of Travis CI:
-
-<img src="https://travis-ci.org/jayemerson/big.char.svg?branch=master">
+Current status via use of
+[Travis CI](https://travis-ci.org/jayemerson/big.char):
+<a href="https://travis-ci.org/jayemerson/big.char"><img src="https://travis-ci.org/jayemerson/big.char.svg?branch=master"></a>
 
 ## Description
 
