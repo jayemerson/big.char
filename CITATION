@@ -1,0 +1,14 @@
+bibentry("Manual",
+   title = "R: A Language and Environment for Statistical Computing",
+   author = person("Jay Emerson"),
+   organization = "Department of Statistics, Yale University",
+   address      = "New Haven, CT",
+   year   = version$year,
+   note   = "Work in Progress",
+   url    = "",
+
+   mheader = "To cite big.char in publications use:",
+
+   mfooter = 
+     "You are probably just citing the package at this point."
+)
