@@ -21,6 +21,7 @@ is truncated to three (3) characters.
     > require(devtools)
     > install_github('big.char', 'jayemerson')
     > library(big.char)
+    >
     > x <- big.char(5, 3, init="ABC")
     > x[]
     [1] "ABC" "ABC" "ABC" "ABC" "ABC"
