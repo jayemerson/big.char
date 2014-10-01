@@ -2,7 +2,7 @@
 # Development for package big.char
 #
 # Jay Emerson
-# September 2014
+# October 2014
 #
 #
 # I'll store strings in columns of a big.matrix
