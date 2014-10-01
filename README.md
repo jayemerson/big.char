@@ -26,6 +26,15 @@ The big.char package is licensed under LGPL-3.
 
 ## Hey Jay!
 
+After creating the public repository on GitHib, essentially empty
+with only `README.md`, I cloned to my laptop:
+
+    git clone https://github.com/jayemerson/big.char.git
+    
+I then moved the package contents into the local `big.char` directory,
+at which point the following workflow appears sufficient for my own
+purposes:
+
 ---
     git status
     git commit -am "Short commit message here"
