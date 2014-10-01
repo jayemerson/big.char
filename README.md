@@ -15,9 +15,9 @@ unavoidable given the use of memory-mapped files.
 ## Getting Started
 
 ---
-> require(devtools)
-> install_github('big.char', 'jayemerson')
-> library(big.char)
+    > require(devtools)
+    > install_github('big.char', 'jayemerson')
+    > library(big.char)
 ---
 
 ## License
@@ -27,7 +27,8 @@ The big.char package is licensed under LGPL-3.
 ## Hey Jay!
 
 ---
-git status
-git commit -am "Short commit message here"
-git push origin
+    git status
+    git commit -am "Short commit message here"
+    git push origin
 ---
+
