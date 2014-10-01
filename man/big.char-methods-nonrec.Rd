@@ -3,7 +3,9 @@
 \name{[,big.char,ANY,ANY,missing-method}
 \alias{[,big.char,ANY,ANY,ANY-method}
 \alias{[,big.char,ANY,ANY,missing-method}
-\alias{[,big.char,missing,ANY,missing-method}
+\alias{[,big.char,ANY,missing,ANY-method}
+\alias{[,big.char,missing,ANY,ANY-method}
+\alias{[,big.char,missing,missing,ANY-method}
 \alias{[<-,big.char,ANY,ANY-method}
 \alias{[<-,big.char,missing,ANY-method}
 \title{non-recommended [:(ANY, ANY, missing) signature}
@@ -14,9 +16,13 @@
 
 \S4method{[}{big.char,ANY,ANY}(x, i, j, ...) <- value
 
-\S4method{[}{big.char,missing,ANY,missing}(x, i, j, ..., drop = TRUE)
+\S4method{[}{big.char,missing,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{big.char,missing,ANY}(x, i, j, ...) <- value
+
+\S4method{[}{big.char,ANY,missing,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{big.char,missing,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{a \code{\link{big.char}}}
@@ -41,5 +47,9 @@ non-recommended [<-:(ANY, ANY) signature
 non-recommended [:(missing, ANY) signature
 
 non-recommended [<-:(missing, ANY) signature
+
+non-recommended  [:(ANY, missing, ANY) signature
+
+non-recommended  [:(missing, missing, ANY) signature
 }
 

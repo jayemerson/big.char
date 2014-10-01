@@ -222,7 +222,7 @@ setMethod('[<-',
 #' @title non-recommended [:(missing, ANY) signature
 #' @rdname big.char-methods-nonrec
 setMethod("[",
-          signature(x = "big.char", i="missing", j="ANY", drop="missing"),
+          signature(x = "big.char", i="missing", j="ANY", drop="ANY"),
           function(x, i, j, ..., drop) {
             stop("Don't allow manual get:(missing, ANY, missing)")
           })
@@ -257,6 +257,14 @@ setMethod("[",
                                        function(x) rawToChar(as.raw(x)), "")
             return(apply(val, 2, function(x)
               ifelse(all(is.na(x)), NA, paste(x[!is.na(x)], collapse=""))))
+          })
+
+#' @title non-recommended  [:(ANY, missing, ANY) signature
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="ANY", j="missing", drop="ANY"),
+          function(x, i, j, ..., drop) {
+            stop("drop= is not supported or necessary")
           })
 
 #
@@ -325,6 +333,14 @@ setMethod("[",
                            ifelse(any(!is.na(x)),
                                   paste(x[!is.na(x)], collapse=""), NA)
                          }))
+          })
+
+#' @title non-recommended  [:(missing, missing, ANY) signature
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="missing", j="missing", drop="ANY"),
+          function(x, i, j, ..., drop) {
+            stop("drop= is not supported or necessary")
           })
 
 #' @title Full big.char assignment
