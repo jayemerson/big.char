@@ -14,7 +14,7 @@ unavoidable given the use of memory-mapped files.
 
 ## Getting Started
 
-The next to last command will trigger a warning because the string
+The next to last command triggers a warning because the string
 is truncated to three (3) characters.
 
 ---
@@ -23,8 +23,14 @@ is truncated to three (3) characters.
     > library(big.char)
     > x <- big.char(5, 3, init="ABC")
     > x[]
+    [1] "ABC" "ABC" "ABC" "ABC" "ABC"
     > x[1] <- ""
     > x[-1] <- c(NA, "*", "--", "ABCD")
+    Warning message:
+    In `[<-`(`*tmp*`, -1, value = c(NA, "*", "--", "DEFG")) :
+    Long string(s) truncated to maxchar characters
+    > x[]
+    [1] ""    NA    "*"   "--"  "DEF"
 ---
 
 ## License
