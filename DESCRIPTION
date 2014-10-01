@@ -1,0 +1,19 @@
+Package: big.char
+Type: Package
+Title: Provides very large vectors of character strings
+Version: 1.0.1
+Date: 2014-10-01
+Author: Jay Emerson
+Maintainer: Jay Emerson <john.emerson@yale.edu>
+Description: This package extends bigmemory's big.matrix objects
+    to support big vectors of character strings.  The only constraint
+    is the user-specified maximum character length which must be
+    satisfied for every string in the vector.  Shorter strings are
+    padded with NAs, consuming (and wasting) space, but this is
+    unavoidable given the use of memory-mapped files.
+License: LGPL-3
+Copyright: (C) 2014 John W. Emerson
+Depends:
+    methods
+Imports:
+    bigmemory
