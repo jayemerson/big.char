@@ -196,6 +196,7 @@ setMethod("[",
             return(bigmemory:::GetElements.bm(x, i, j))
           })
 
+#' @title non-recommended  [:(ANY, ANY, ANY) signature
 #' @rdname big.char-methods-nonrec
 setMethod("[",
           signature(x = "big.char", i="ANY", j="ANY", drop="ANY"),
