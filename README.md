@@ -28,6 +28,6 @@ The big.char package is licensed under LGPL-3.
 
 ---
 git status
-git commit -am "Message here"
+git commit -am "Short commit message here"
 git push origin
 ---
