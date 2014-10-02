@@ -1,4 +1,4 @@
-Package: big.char
+xxxPackage: big.char
 Type: Package
 Title: Provides very large vectors of character strings
 Version: 1.0.2
