@@ -42,6 +42,16 @@ setClass('big.char', contains='big.matrix')
 #'
 #' @details
 #' This is the full set of details for documentation.
+#' 
+#' big.char only currently supports the basic ASCII character set,
+#' with numeric values up to 127.  And surprising things may happen
+#' with special characters like tab ('\t') and end-of-line ('\n');
+#' of course they look like two characters, but are really one.
+#' And surprising things may happen with ASCII codes for things like
+#' DELETE.  If someone had the value 127 in a big.char data structure,
+#' this would then extract as the octal code \177 for DELETE, also
+#' a single character value.  At this point, our goal is to support
+#' characters as you would expect in data analysis 99.9% of the time.
 #'  
 #' @param length the vector length
 #' @param maxchar the maximum length of the strings, 8 by default
@@ -52,7 +62,7 @@ setClass('big.char', contains='big.matrix')
 #' @param backingpath should be obvious, right?
 #' @param binarydescriptor see \code{\link[bigmemory]{big.matrix}}
 #' @param shared see \code{\link[bigmemory]{big.matrix}}
-#' @return Returns a \code{big.vector} object
+#' @return Returns a \code{big.char} object
 #' @references None.
 #' @author Jay Emerson
 #' @seealso \code{\link[bigmemory]{big.matrix}}
@@ -75,10 +85,14 @@ big.char <- function(length, maxchar=8,
                      shared=TRUE)
 {
   if (!is.null(init)) {
-    if (class(init) != "character" || nchar(init) > maxchar ||
-          length(init) > 1) 
-      stop("Invalid initialization.")
+    if (!is.na(init)) {
+      if (class(init) != "character" || length(init) > 1) 
+        stop("Invalid initialization.")
+    }
   }
+  if (is.null(init)) warning("No initialization; buyer beware!")
+  if (!is.numeric(length) | length(length) != 1 | length < 1)
+    stop("Invalid length of big.char; try an integer >= 1")
   if (!is.null(names) && length(names) != length) stop("Wrong length names!")
   # RE names: Note that I'm not enforcing things like uniqueness, etc...
   # that really could be important at some point.  Or perhaps
@@ -92,11 +106,9 @@ big.char <- function(length, maxchar=8,
                              backingpath=backingpath,
                              descriptorfile=descriptorfile,
                              binarydescriptor=binarydescriptor,
-                             shared=TRUE)
+                             shared=shared)
   
   y <- new("big.char", x)
-  if (is.null(y))
-    stop("Error encountered when creating instance of type big.char")
   if (!is.null(init)) y[] <- init
   return(y)
 }
@@ -224,6 +236,20 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="missing", j="ANY", drop="ANY"),
           function(x, i, j, ..., drop) {
+            stop("Don't allow manual get:(missing, ANY, ANY)")
+          })
+#' @title non-recommended [:(missing, ANY) signature
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="missing", j="ANY", drop="logical"),
+          function(x, i, j, ..., drop) {
+            stop("Don't allow manual get:(missing, ANY, logical)")
+          })
+#' @title non-recommended [:(missing, ANY) signature
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="missing", j="ANY", drop="missing"),
+          function(x, i, j, ..., drop) {
             stop("Don't allow manual get:(missing, ANY, missing)")
           })
 
@@ -251,6 +277,7 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
+            if (maxchar(x)==1) warning("LIKELY BUG HERE")
             if (nargs() >= 3) stop("x[i,] signature not permitted")
             val <- bigmemory:::GetCols.bm(x, i, drop=FALSE) # Note: using cols!
             val[!is.na(val)] <- vapply(val[!is.na(val)],
@@ -258,14 +285,23 @@ setMethod("[",
             return(apply(val, 2, function(x)
               ifelse(all(is.na(x)), NA, paste(x[!is.na(x)], collapse=""))))
           })
-
-#' @title non-recommended  [:(ANY, missing, ANY) signature
+#' @title Not recommend, but we pass this through
 #' @rdname big.char-methods-nonrec
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="ANY"),
           function(x, i, j, ..., drop) {
-            stop("drop= is not supported or necessary")
+            warning("drop ignored")
+            return(x[i])
           })
+#' @title Not recommend, but we pass this through
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="ANY", j="missing", drop="logical"),
+          function(x, i, j, ..., drop) {
+            warning("drop ignored")
+            return(x[i])
+          })
+
 
 #
 # The following is a substantial amount of work which may not be
@@ -323,6 +359,7 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="missing", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
+            if (maxchar(x)==1) warning("LIKELY BUG HERE")
             val <- bigmemory:::GetAll.bm(x)
             if (any(!is.na(val)))
               val[!is.na(val)] <- sapply(val[!is.na(val)],
@@ -334,13 +371,19 @@ setMethod("[",
                                   paste(x[!is.na(x)], collapse=""), NA)
                          }))
           })
-
+#' @title non-recommended  [:(missing, missing, logical) signature
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="missing", j="missing", drop="logical"),
+          function(x, i, j, ..., drop) {
+            stop("REVISIT, may need this")
+          })
 #' @title non-recommended  [:(missing, missing, ANY) signature
 #' @rdname big.char-methods-nonrec
 setMethod("[",
           signature(x = "big.char", i="missing", j="missing", drop="ANY"),
           function(x, i, j, ..., drop) {
-            stop("drop= is not supported or necessary")
+            stop("REVISIT")
           })
 
 #' @title Full big.char assignment

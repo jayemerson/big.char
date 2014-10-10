@@ -1,0 +1,19 @@
+Errata addressed from testing of STAT 662 class:
+
+big.char(0, 3) should be trapped properly.
+
+Now issue warning if init=NULL because no initialization might be risky.
+
+init=NA wasn't working; fixed so it actually initializes with NA.
+
+Simplified big.char() code; checking is.null(y) wasn't necessary.
+
+Allow init to be overly long, simply truncate for consistency.
+
+shared=shared in creating the big.matrix()
+
+Added documentation on special characters (DELETE, tab, etc...)
+
+Added extra signature for blocking big.matrix inheritance, taking a
+small step closer to ultimate intended usage.  Some things are still
+allowed for debugging purposes only.
