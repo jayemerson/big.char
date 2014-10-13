@@ -17,3 +17,5 @@ Depends:
     methods
 Imports:
     bigmemory
+Suggests:
+    testthat
