@@ -27,13 +27,23 @@ big.char(length, maxchar = 8, init = NULL, names = NULL,
 \item{shared}{see \code{\link[bigmemory]{big.matrix}}}
 }
 \value{
-Returns a \code{big.vector} object
+Returns a \code{big.char} object
 }
 \description{
 Create a \code{big.char} vector of strings
 }
 \details{
 This is the full set of details for documentation.
+
+big.char only currently supports the basic ASCII character set,
+with numeric values up to 127.  And surprising things may happen
+with special characters like tab and end-of-line;
+of course they look like two characters, but are really one.
+And surprising things may happen with ASCII codes for things like
+DELETE.  If someone had the value 127 in a big.char data structure,
+this would then extract as the octal code \177 for DELETE, also
+a single character value.  At this point, our goal is to support
+characters as you would expect in data analysis 99.9% of the time.
 }
 \examples{
 x <- big.char(5, 3, init="ABC")

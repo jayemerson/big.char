@@ -2,10 +2,15 @@
 \docType{methods}
 \name{[,big.char,ANY,ANY,missing-method}
 \alias{[,big.char,ANY,ANY,ANY-method}
+\alias{[,big.char,ANY,ANY,logical-method}
 \alias{[,big.char,ANY,ANY,missing-method}
 \alias{[,big.char,ANY,missing,ANY-method}
+\alias{[,big.char,ANY,missing,logical-method}
 \alias{[,big.char,missing,ANY,ANY-method}
+\alias{[,big.char,missing,ANY,logical-method}
+\alias{[,big.char,missing,ANY,missing-method}
 \alias{[,big.char,missing,missing,ANY-method}
+\alias{[,big.char,missing,missing,logical-method}
 \alias{[<-,big.char,ANY,ANY-method}
 \alias{[<-,big.char,missing,ANY-method}
 \title{non-recommended [:(ANY, ANY, missing) signature}
@@ -14,13 +19,23 @@
 
 \S4method{[}{big.char,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
+\S4method{[}{big.char,ANY,ANY,logical}(x, i, j, ..., drop = TRUE)
+
 \S4method{[}{big.char,ANY,ANY}(x, i, j, ...) <- value
 
 \S4method{[}{big.char,missing,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
+\S4method{[}{big.char,missing,ANY,logical}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{big.char,missing,ANY,missing}(x, i, j, ..., drop = TRUE)
+
 \S4method{[}{big.char,missing,ANY}(x, i, j, ...) <- value
 
 \S4method{[}{big.char,ANY,missing,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{big.char,ANY,missing,logical}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{big.char,missing,missing,logical}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{big.char,missing,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
@@ -42,13 +57,23 @@ non-recommended [:(ANY, ANY, missing) signature
 
 non-recommended  [:(ANY, ANY, ANY) signature
 
+non-recommended  [:(ANY, ANY, logical) signature
+
 non-recommended [<-:(ANY, ANY) signature
+
+non-recommended [:(missing, ANY) signature
+
+non-recommended [:(missing, ANY) signature
 
 non-recommended [:(missing, ANY) signature
 
 non-recommended [<-:(missing, ANY) signature
 
-non-recommended  [:(ANY, missing, ANY) signature
+Not recommend, but we pass this through
+
+Not recommend, but we pass this through
+
+non-recommended  [:(missing, missing, logical) signature
 
 non-recommended  [:(missing, missing, ANY) signature
 }

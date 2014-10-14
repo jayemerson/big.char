@@ -12,10 +12,12 @@
 # only at the moment, codes 0 to 127.  A value of NA
 # is dropped and (tentatively) used for padding short
 # strings, so I support of strings of shorter than
-# the maximum length.
+# the maximum length.  But of course a value of NA is
+# just fine, too.
 #
-# Use 0 for the empty string "", which is different from NA.
-# Note the difficulty with charToRaw() and rawToChar().
+# We use 0 for the empty string "", which is different from
+# NA.  Note the difficulty with charToRaw() and rawToChar()
+# on this point.
 #
 ################################################################################
 ########################################################################### 80 #
@@ -45,7 +47,7 @@ setClass('big.char', contains='big.matrix')
 #' 
 #' big.char only currently supports the basic ASCII character set,
 #' with numeric values up to 127.  And surprising things may happen
-#' with special characters like tab ('\t') and end-of-line ('\n');
+#' with special characters like tab and end-of-line;
 #' of course they look like two characters, but are really one.
 #' And surprising things may happen with ASCII codes for things like
 #' DELETE.  If someone had the value 127 in a big.char data structure,
@@ -186,10 +188,6 @@ setMethod('names<-', signature(x="big.char", value="character"),
 # everything is a vector.
 #
 
-### JAY: change drop="missing" to "ANY", or else have empty
-### signatures, perhaps, preventing the use of drop which
-### serves no purpose here.
-
 #######################################
 # (ANY, ANY) signatures; debugging only
 
@@ -212,6 +210,13 @@ setMethod("[",
 #' @rdname big.char-methods-nonrec
 setMethod("[",
           signature(x = "big.char", i="ANY", j="ANY", drop="ANY"),
+          function(x, i, j, ..., drop) {
+            stop("drop= is not supported or necessary")
+          })
+#' @title non-recommended  [:(ANY, ANY, logical) signature
+#' @rdname big.char-methods-nonrec
+setMethod("[",
+          signature(x = "big.char", i="ANY", j="ANY", drop="logical"),
           function(x, i, j, ..., drop) {
             stop("drop= is not supported or necessary")
           })
@@ -277,53 +282,25 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
-            cat("In get:(ANY, missing, missing) signature\n")
+            #cat("In get:(ANY, missing, missing) signature\n")
             if (nargs() >= 3) stop("x[i,] signature not permitted")
             val <- bigmemory:::GetCols.bm(x, i, drop=FALSE) # Note: using cols!
             if (any(!is.na(val)))
               val[!is.na(val)] <- sapply(val[!is.na(val)],
                                          function(x) rawToChar(as.raw(x)))
-            #if (!is.matrix(val)) val <- matrix(val, ncol=1)  #### OUCH
             return(apply(val, 2,
                          function(x) {
                            ifelse(any(!is.na(x)),
                                   paste(x[!is.na(x)], collapse=""), NA)
                          }))
-            #            val[!is.na(val)] <- vapply(val[!is.na(val)],
-            #                                       function(x) rawToChar(as.raw(x)), "")
-            #            return(apply(val, 2, function(x)
-            #              ifelse(all(is.na(x)), NA, paste(x[!is.na(x)], collapse=""))))
-            #          })
           })
-
-#setMethod("[",
-#          signature(x = "big.char", i="ANY", j="missing", drop="missing"),
-#          function(x, i, j, ..., drop) {
-#            cat("In get:(ANY, missing, missing)\n")
-#            cat("THIS IS OUR PRIMARY EXTRACTION SIGNATURE.\n")
-#            if (nargs() >= 3) stop("x[i,] signature not permitted")
-#            val <- bigmemory:::GetCols.bm(x, i, drop=FALSE) # Note: using cols!
-#            
-#            # HOMEWORK EXERCISE: write the body of this signature so that it
-#            # works properly for this type of extraction.
-#            areNA <- apply(val,2,function(v) all(is.na(v)))
-#            val <- lapply(seq(ncol(val)), function(v) val[,v]) # val <- split(val,rep(1:ncol(val), each=nrow(val)))
-#            val <- lapply(val, na.exclude)
-#            val <- sapply(val, function(v) rawToChar(as.raw(v)))
-#            val[areNA] <- NA
-#            
-#            return(val) # Not really.  We want a vector of length(i) of strings
-#            # Need to handle "" and NA, too (may or may not be
-#            # difficult special cases).
-#            
-#          })
 
 #' @title Not recommend, but we pass this through
 #' @rdname big.char-methods-nonrec
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="ANY"),
           function(x, i, j, ..., drop) {
-            warning("drop ignored")
+            warning("drop argument ignored in big.char extraction")
             return(x[i])
           })
 #' @title Not recommend, but we pass this through
@@ -331,7 +308,7 @@ setMethod("[",
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="logical"),
           function(x, i, j, ..., drop) {
-            warning("drop ignored")
+            warning("drop argument ignored in big.char extraction")
             return(x[i])
           })
 
@@ -392,12 +369,11 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="missing", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
-            cat("In get:(missing, missing, missing) signature\n")
+            #cat("In get:(missing, missing, missing) signature\n")
             val <- bigmemory:::GetAll.bm(x, drop=FALSE)
             if (any(!is.na(val)))
               val[!is.na(val)] <- sapply(val[!is.na(val)],
                                          function(x) rawToChar(as.raw(x)))
-            #if (!is.matrix(val)) val <- matrix(val, ncol=1)  #### OUCH
             return(apply(val, 2,
                          function(x) {
                            ifelse(any(!is.na(x)),
@@ -409,14 +385,16 @@ setMethod("[",
 setMethod("[",
           signature(x = "big.char", i="missing", j="missing", drop="logical"),
           function(x, i, j, ..., drop) {
-            stop("REVISIT, may need this")
+            warning("drop argument ignored in big.char extraction")
+            return(x[])
           })
 #' @title non-recommended  [:(missing, missing, ANY) signature
 #' @rdname big.char-methods-nonrec
 setMethod("[",
           signature(x = "big.char", i="missing", j="missing", drop="ANY"),
           function(x, i, j, ..., drop) {
-            stop("REVISIT")
+            warning("drop argument ignored in big.char extraction")
+            return(x[])
           })
 
 #' @title Full big.char assignment
@@ -433,12 +411,6 @@ setMethod('[<-',
             #stop("Not yet implemented")
             #return(SetAll.bm(x, value))
           })
-
-##
-## Do I want to intercept other things that might be attempted?
-## Also check that inheritance doesn't block the usage that I want
-## to detect...
-##
 
 ####################################################### 60 #
 ########################################################################### 80 #
