@@ -26,8 +26,13 @@ test_that("Toy examples 1by3", {
 test_that("Toy examples 1by1", {
   x <- big.char(1, 1, init="A")
   y <- "A"
+  expect_that(x[], equals(y[]))
+  expect_that(x[1], equals(y[1]))
   expect_that(x[0], equals(y[0]))
   expect_that(x[-1], equals(y[-1]))
+  expect_that(x[c(1,1)], equals(y[c(1,1)]))
+  expect_that(x[TRUE], equals(y[TRUE]))
+  expect_that(x[FALSE], equals(y[FALSE]))
   names(x) <- "a"
   names(y) <- "a"
   expect_that(x[], equals(y[]))
@@ -35,6 +40,8 @@ test_that("Toy examples 1by1", {
   expect_that(x[c(1,1)], equals(y[c(1,1)]))
   expect_that(x[0], equals(y[0]))
   expect_that(x[-1], equals(y[-1]))
+  expect_that(x[TRUE], equals(y[TRUE]))
+  expect_that(x[FALSE], equals(y[FALSE]))
 })
 
 test_that("Toy examples 2", {

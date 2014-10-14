@@ -15,6 +15,18 @@ satisfied for every string in the vector.  Shorter strings are
 padded with NAs, consuming (and wasting) space, but this is
 unavoidable given the use of memory-mapped files.
 
+## NOTE: under development!
+
+This package is very much under development.  The basic functionality
+seems fairly solid.  Not all usage errors may be trapped in a friendly
+way.  For example, if a `big.char` vector, `x` has length 5, then
+`x[6]` generates an error (this would not be the case with a regular
+vector of strings).
+
+Known issues to be resolved:
+- index recycling
+- indices out of bounds
+
 ## Getting Started
 
 The next to last command triggers a warning because the string
