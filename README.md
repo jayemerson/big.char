@@ -27,8 +27,9 @@ vector of strings).  Please feel free to email me with problems,
 questions, or requests.
 
 Known issues to be resolved:
-- index recycling
-- indices out of bounds
+- index recycling (bug in bigmemory, fix there)
+- indices out of bounds (needs fixing in big.char for consistency
+with R's default behavior/behaviour)
 
 ## Getting Started
 
