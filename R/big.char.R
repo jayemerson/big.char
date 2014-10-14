@@ -174,7 +174,8 @@ setMethod('names', signature(x="big.char"),
 #' @exportMethod names<-
 setMethod('names<-', signature(x="big.char", value="character"),
           function(x, value) {
-            warning("Descriptor file (if applicable) is not modified.\n")
+            if (!options()$bigmemory.allow.dimnames)
+              warning("Descriptor file (if applicable) is not modified.\n")
             colnames(x) <- value
             return(x)
           })
@@ -283,16 +284,20 @@ setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
             #cat("In get:(ANY, missing, missing) signature\n")
+            if (is.character(i)) i <- which(i %in% names(x))
             if (nargs() >= 3) stop("x[i,] signature not permitted")
             val <- bigmemory:::GetCols.bm(x, i, drop=FALSE) # Note: using cols!
             if (any(!is.na(val)))
               val[!is.na(val)] <- sapply(val[!is.na(val)],
                                          function(x) rawToChar(as.raw(x)))
-            return(apply(val, 2,
+            val <- apply(val, 2,
                          function(x) {
                            ifelse(any(!is.na(x)),
                                   paste(x[!is.na(x)], collapse=""), NA)
-                         }))
+                         })       
+            if (length(val)>0) names(val)[i] <- names(x)[i]
+            else if (!is.null(names(x))) names(val) <- character(0)
+            return(val)
           })
 
 #' @title Not recommend, but we pass this through
@@ -338,6 +343,7 @@ setMethod('[<-',
                               if (length(a)==0) return(0)
                               else return(as.integer(sapply(a, charToRaw)))
                             })
+            if (any(unlist(value) > 127)) stop("Invalid character")
             these <- sapply(value, length)
             value[these < maxchar(x)] <-
               lapply(value[these < maxchar(x)],
@@ -374,11 +380,14 @@ setMethod("[",
             if (any(!is.na(val)))
               val[!is.na(val)] <- sapply(val[!is.na(val)],
                                          function(x) rawToChar(as.raw(x)))
-            return(apply(val, 2,
+            val <- apply(val, 2,
                          function(x) {
                            ifelse(any(!is.na(x)),
                                   paste(x[!is.na(x)], collapse=""), NA)
-                         }))
+                         })
+            if (length(val)>0) names(val) <- names(x)
+            else if (!is.null(names(x))) names(val) <- character(0)
+            return(val)
           })
 #' @title non-recommended  [:(missing, missing, logical) signature
 #' @rdname big.char-methods-nonrec
