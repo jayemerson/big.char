@@ -18,10 +18,13 @@ unavoidable given the use of memory-mapped files.
 ## NOTE: under development!
 
 This package is very much under development.  The basic functionality
-seems fairly solid.  Not all usage errors may be trapped in a friendly
-way.  For example, if a `big.char` vector, `x` has length 5, then
+seems fairly solid.  The implementation may not be as efficient as
+it could be.  Not all usage errors may be trapped or handled
+in a friendly or appropriate manner.
+For example, if a `big.char` vector, `x` has length 5, then
 `x[6]` generates an error (this would not be the case with a regular
-vector of strings).
+vector of strings).  Please feel free to email me with problems,
+questions, or requests.
 
 Known issues to be resolved:
 - index recycling
