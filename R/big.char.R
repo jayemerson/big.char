@@ -283,8 +283,11 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
-            #cat("In get:(ANY, missing, missing) signature\n")
-            if (is.character(i)) i <- which(i %in% names(x))
+            #cat("In get:(ANY, missing, missing) signature\n")   
+            if (is.character(i)) {
+              if (!is.null(names(x))) i <- match(i, names(x))
+              else stop("object does not have names")
+            }
             if (nargs() >= 3) stop("x[i,] signature not permitted")
             val <- bigmemory:::GetCols.bm(x, i, drop=FALSE) # Note: using cols!
             if (any(!is.na(val)))
@@ -295,7 +298,7 @@ setMethod("[",
                            ifelse(any(!is.na(x)),
                                   paste(x[!is.na(x)], collapse=""), NA)
                          })       
-            if (length(val)>0) names(val)[i] <- names(x)[i]
+            if (length(val)>0) names(val) <- names(x)[i]
             else if (!is.null(names(x))) names(val) <- character(0)
             return(val)
           })
