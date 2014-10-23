@@ -2,8 +2,8 @@
 \docType{class}
 \name{big.char-class}
 \alias{big.char-class}
-\title{S4 class big.char inheriting from bigmemory::big.matrix}
+\title{S4 class big.char inheriting from bigmemory::big.matrix.}
 \description{
-S4 class big.char inheriting from bigmemory::big.matrix
+S4 class big.char inheriting from bigmemory::big.matrix.
 }
 

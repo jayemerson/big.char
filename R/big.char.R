@@ -33,11 +33,11 @@
 # class big.matrix (which is called the superclass).
 #
 
-#' S4 class big.char inheriting from bigmemory::big.matrix
+#' S4 class big.char inheriting from bigmemory::big.matrix.
 #' @exportClass big.char
 setClass('big.char', contains='big.matrix') 
 
-#' @title Create a big.char object
+#' @title Create a big.char object!
 #'
 #' @description
 #' Create a \code{big.char} vector of strings
@@ -92,7 +92,7 @@ big.char <- function(length, maxchar=8,
         stop("Invalid initialization.")
     }
   }
-  if (is.null(init)) warning("No initialization; buyer beware!")
+  #if (is.null(init)) warning("No initialization; buyer beware!")
   if (!is.numeric(length) | length(length) != 1 | length < 1)
     stop("Invalid length of big.char; try an integer >= 1")
   if (!is.null(names) && length(names) != length) stop("Wrong length names!")
@@ -354,7 +354,7 @@ setMethod('[<-',
             
             # POTENTIAL HOMEWORK EXERCISE:
             if (any(these > maxchar(x))) {
-              warning("Long string(s) truncated to maxchar characters")
+              #warning("Long string(s) truncated to maxchar characters")
               value[these > maxchar(x)] <- lapply(value[these > maxchar(x)],
                                                   function(a) a[1:maxchar(x)])
             }
