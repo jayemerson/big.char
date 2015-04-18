@@ -1,8 +1,8 @@
 Package: big.char
 Type: Package
 Title: Provides very large vectors of character strings
-Version: 1.0.4
-Date: 2014-10-14
+Version: 1.0.5
+Date: 2015-04-18
 Author: Jay Emerson
 Maintainer: Jay Emerson <john.emerson@yale.edu>
 Description: This package extends bigmemory's big.matrix objects
@@ -12,7 +12,7 @@ Description: This package extends bigmemory's big.matrix objects
     padded with NAs, consuming (and wasting) space, but this is
     unavoidable given the use of memory-mapped files.
 License: LGPL-3
-Copyright: (C) 2014 John W. Emerson
+Copyright: (C) 2015 John W. Emerson
 Depends:
     methods
 Imports:
