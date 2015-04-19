@@ -11,6 +11,7 @@ test_that("Toy examples 3by1", {
   expect_that(x[0], equals(y[0]))
   expect_that(x[c(T,T,F)], equals(y[c(T,T,F)]))
   #expect_that(x[TRUE], equals(y[TRUE])) # Odd -- ideally should work
+  #expect_that(x[c(1,4)], equals(y[c(1,4)]))
 })
 
 test_that("Toy examples 1by3", {
@@ -21,6 +22,8 @@ test_that("Toy examples 1by3", {
   expect_that(x[-1], equals(y[-1]))
   expect_that(x[c(1,1)], equals(y[c(1,1)]))
   expect_that(x[0], equals(y[0]))
+  expect_that(x[TRUE], equals(y[TRUE]))
+  expect_that(x[FALSE], equals(y[FALSE]))
 })
 
 test_that("Toy examples 1by1", {
@@ -42,6 +45,7 @@ test_that("Toy examples 1by1", {
   expect_that(x[-1], equals(y[-1]))
   expect_that(x[TRUE], equals(y[TRUE]))
   expect_that(x[FALSE], equals(y[FALSE]))
+  expect_that(x["a"], equals(y["a"]))
 })
 
 test_that("Toy examples 2", {

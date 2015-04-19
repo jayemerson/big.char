@@ -2,11 +2,11 @@
 # Development for package big.char
 #
 # Jay Emerson
-# October 2014
+# April 2015
 #
-#
-# I'll store strings in columns of a big.matrix
-# of type char.
+# BASIC PLAN:
+#   I'll store strings in columns of a big.matrix
+#   of type char.
 #
 # FYI -128 is the NA code for char; I support basic ASCII
 # only at the moment, codes 0 to 127.  A value of NA
@@ -29,7 +29,7 @@
 # In fact, we probably need to block more than we do at
 # the moment, so a few odd thing are probably possible.
 #
-# The child class big.char inherets behavior from the parent
+# The child class big.char inherits behavior from the parent
 # class big.matrix (which is called the superclass).
 #
 
@@ -86,13 +86,11 @@ big.char <- function(length, maxchar=8,
                      binarydescriptor=FALSE,
                      shared=TRUE)
 {
-  if (!is.null(init)) {
-    if (!is.na(init)) {
+  if (!is.null(init) && !is.na(init)) {
       if (class(init) != "character" || length(init) > 1) 
         stop("Invalid initialization.")
-    }
   }
-  #if (is.null(init)) warning("No initialization; buyer beware!")
+
   if (!is.numeric(length) | length(length) != 1 | length < 1)
     stop("Invalid length of big.char; try an integer >= 1")
   if (!is.null(names) && length(names) != length) stop("Wrong length names!")
@@ -181,7 +179,7 @@ setMethod('names<-', signature(x="big.char", value="character"),
           })
 
 #
-# Now do the get/set signatures for subsetting and assignment.
+# Now do the GET/SET signatures for subsetting and assignment.
 # We don't want to allow inheritance of some big.matrix
 # signatures, so we explicitly block these.  Only a few
 # are really needed.  Note that we don't every need
@@ -271,6 +269,7 @@ setMethod('[<-',
 # (ANY, missing) signatures: most of the real work
 
 # Really available to support x[i], not x[i,], so trap this with nargs()
+# I think we may need to add this to fix/improve bigmemory, too.
 
 #' @title Core big.char extraction
 #' @rdname big.char-methods
@@ -283,13 +282,35 @@ setMethod('[<-',
 setMethod("[",
           signature(x = "big.char", i="ANY", j="missing", drop="missing"),
           function(x, i, j, ..., drop) {
-            #cat("In get:(ANY, missing, missing) signature\n")   
+            #cat("In get:(ANY, missing, missing) signature\n") 
+            if (nargs() >= 3) stop("x[i,] signature not permitted")
+            iota <- NA # Shae & Rodrigo? Keep an eye out below as we change...
             if (is.character(i)) {
               if (!is.null(names(x))) i <- match(i, names(x))
               else stop("object does not have names")
-            }
-            if (nargs() >= 3) stop("x[i,] signature not permitted")
+            } else {
+              # Handle negative and logical indexing?  Shae & Rodrigo
+              if (all(i<=0)) i <- (1:length(x))[i]
+              else {
+                if (any(i<0)) stop("only 0's may be mixed with negative subscripts")
+                else {
+                  # Handles logical indexing?  Maybe this first is okay.
+                  if (is.logical(i)) i <- which(i)
+                  # A hack to return NA when an extraction is off the end
+                  # of the character vector.  Pretty obscure, and not working.
+                  iota <- which(i>length(x))
+                  i[iota] <- length(x) # Temporarily get the last thing,
+                                       # then perhaps fill it later?
+                                       # Possibly, but not there yet.
+                                       # And would likely fail some test
+                                       # That hasn't yet been written?
+                }
+              } # End addition of Shae & Rodrigo, needs reconsideration
+                # and lots and lots of testing.
+            } # The negative indexing might be fine.  Others maybe not.
+            
             val <- bigmemory:::GetCols.bm(x, i, drop=FALSE) # Note: using cols!
+            
             if (any(!is.na(val)))
               val[!is.na(val)] <- sapply(val[!is.na(val)],
                                          function(x) rawToChar(as.raw(x)))
@@ -298,6 +319,8 @@ setMethod("[",
                            ifelse(any(!is.na(x)),
                                   paste(x[!is.na(x)], collapse=""), NA)
                          })       
+            #val[iota] <- NA # Maybe?  From Shae & Rodrigo
+            
             if (length(val)>0) names(val) <- names(x)[i]
             else if (!is.null(names(x))) names(val) <- character(0)
             return(val)
@@ -380,17 +403,29 @@ setMethod("[",
           function(x, i, j, ..., drop) {
             #cat("In get:(missing, missing, missing) signature\n")
             val <- bigmemory:::GetAll.bm(x, drop=FALSE)
-            if (any(!is.na(val)))
-              val[!is.na(val)] <- sapply(val[!is.na(val)],
-                                         function(x) rawToChar(as.raw(x)))
-            val <- apply(val, 2,
-                         function(x) {
-                           ifelse(any(!is.na(x)),
-                                  paste(x[!is.na(x)], collapse=""), NA)
-                         })
+
+            # Original from Jay: two "apply" calls perhaps improved
+            # by Shae & Rodrigo's single loop.  Initial testing passes.
+            # Perhaps some memory overhead.
+            #if (any(!is.na(val)))
+            #  val[!is.na(val)] <- sapply(val[!is.na(val)],
+            #                             function(x) rawToChar(as.raw(x)))
+            #val <- apply(val, 2,
+            #             function(x) {
+            #               ifelse(any(!is.na(x)),
+            #                      paste(x[!is.na(x)], collapse=""), NA)
+            #             })
+            
+            # NEW attempt from Shae & Rodrigo?  Might have some memory
+            # overhead, but should be faster.
+            for (j in 1:length(x)) {
+              if (!is.na(val[1,j]))
+                val[1,j] <- rawToChar(as.raw(val[!is.na(val[,j]),j]))
+            }
+            
             if (length(val)>0) names(val) <- names(x)
             else if (!is.null(names(x))) names(val) <- character(0)
-            return(val)
+            return(val[1,])
           })
 #' @title non-recommended  [:(missing, missing, logical) signature
 #' @rdname big.char-methods-nonrec
