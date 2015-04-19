@@ -1,5 +1,5 @@
 bibentry("Manual",
-   title = "R: A Language and Environment for Statistical Computing",
+   title = "big.char: Supporting very large vectors of character strings",
    author = person("Jay Emerson"),
    organization = "Department of Statistics, Yale University",
    address      = "New Haven, CT",
