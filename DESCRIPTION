@@ -1,6 +1,6 @@
 Package: big.char
 Type: Package
-Title: Provides very large vectors of character strings
+Title: Provides Very Large Vectors of Character Strings
 Version: 1.0.5
 Date: 2015-04-18
 Author: Jay Emerson

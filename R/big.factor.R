@@ -38,6 +38,7 @@ big.factor <- function(length,
                        binarydescriptor=FALSE,
                        shared=TRUE) {
   
+  # The big.matrix of integer values:
   val <- bigmemory::big.matrix(length, 1, type='integer', init=NULL,
                                backingfile=backingfile,
                                backingpath=backingpath,
@@ -46,6 +47,8 @@ big.factor <- function(length,
                                shared=shared)
   if (!is.null(backingfile)) backingfile <- paste("LEVELS_", backingfile, sep="")
   if (!is.null(descriptorfile)) descriptorfile <- paste("LEVELS_", descriptorfile, sep="")
+  # The big.char of labels for the levels (because this could be very very big
+  # in nasty cases, even though usually nice traditional for categorical variables)
   lev <- big.char(length(unique(levels)), maxchar=maxchar, init="",
                   backingfile=backingfile,
                   backingpath=backingpath,
