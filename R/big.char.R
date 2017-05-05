@@ -17,7 +17,7 @@
 #
 # We use 0 for the empty string "", which is different from
 # NA.  Note the difficulty with charToRaw() and rawToChar()
-# on this point.
+# on this point.   NOTE TO JAY: might be a poor choice.
 #
 ################################################################################
 ########################################################################### 80 #
@@ -86,6 +86,7 @@ big.char <- function(length, maxchar=8,
                      binarydescriptor=FALSE,
                      shared=TRUE)
 {
+  cat("Hello Jay and Hans!\n")
   if (!is.null(init) && !is.na(init)) {
       if (class(init) != "character" || length(init) > 1) 
         stop("Invalid initialization.")

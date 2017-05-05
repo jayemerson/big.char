@@ -19,3 +19,4 @@ Imports:
     bigmemory
 Suggests:
     testthat
+RoxygenNote: 6.0.1
